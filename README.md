@@ -1,2 +1,2 @@
-# comp1501-asgn1
-Assignment 1 for COMP 1501
+# comp1502-asgn1
+Assignment 1 for COMP 1502
