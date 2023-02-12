@@ -16,8 +16,9 @@ public class PuntoBancoGame {
 	ArrayList<Card> bankerHand;
 	ArrayList<Card> playerHand;
 	
-	/*
-	 * Because i'm lazy, the game holds a spot in the arraylist instead of an actual player object. 
+	/**
+	 * Constructor class. Grabs a player by reference and creates a CardDeck object to draw cards from.
+	 * @return no return. Deck and input are created here and used throughout the class.
 	 */
 	public PuntoBancoGame(Player player) {
 		this.player = player; 
@@ -26,6 +27,12 @@ public class PuntoBancoGame {
 		
 	}
 	
+	/**
+	 * Creates hands for the player and banker and manages the logic of the game itself.
+	 * Manages if and how the player draws their cards, and calls getBankerAction() to get the banker's response
+	 * Calls TallyPoints() to tally up the points.
+	 * @throws IOException
+	 */
 	public void playRound() throws IOException {
 		winState = getGameType();
 		getBet();
@@ -40,22 +47,26 @@ public class PuntoBancoGame {
 		
 		//Step 2 - Check both parties' points
 		if(countPoints(playerHand) == 8 || countPoints(playerHand) == 9 || countPoints(bankerHand) == 8 ||
-				countPoints(bankerHand) == 9) {
+				countPoints(bankerHand) == 9) { //If either has a total of 8 or 9, skip to displaying the results
 			displayResults();
 			
-		} else if (countPoints(playerHand) <= 5) {
+		} else if (countPoints(playerHand) <= 5) { //If the player's total is low, draws a new card for them.
 			playerHand.add(drawCard());
-			getBankerAction(true);
+			getBankerAction(true); //Runs the banker's next move with the knowledge that the player drew a new card.
 			displayResults();
 		} else {
-			getBankerAction(false);
+			getBankerAction(false); //Runs the banker's next move with the knowledge that the player did not draw a new card.
 			displayResults();
 		}
 		
-		tallyPoints();
+		tallyPoints(); //Tallies the points and displays the result
 	}
 	
 	
+	/**
+	 * Inputs the user's chosen bet amount.
+	 * @param Takes user input to find the bet amount
+	 */
 	public void getBet() {
 		System.out.print("How much do you want to bet this round? ");
 		betAmount = input.nextInt();
@@ -65,6 +76,28 @@ public class PuntoBancoGame {
 		}
 	}
 	
+	
+	/**
+	 * Checks which participant the user bets on: either a player win, a banker win or a tie
+	 * @return Returns the user's choice
+	 */
+	public char promptGameType() {
+		System.out.println("\nWho do you want to bet on?\n");
+		System.out.println("\t(P) Player Wins");
+		System.out.println("\t(B) Banker Wins");
+		System.out.println("\t(T) Tie Game");
+		System.out.println("");
+		System.out.print("Enter your choice: ");
+		char option = input.nextLine().toLowerCase().charAt(0);
+		return option;
+	}
+	
+	
+	/**
+	 * Prompts for and interprets the user's choice of win condition and applies it to a global variable.
+	 * Calls promptGameType() to display the menu for user selection
+	 * @return returns the player's selection
+	 */
 	private char getGameType() throws IOException {
 		
 		flag = true;
@@ -89,18 +122,10 @@ public class PuntoBancoGame {
 	}
 	
 	
-	public char promptGameType() {
-		System.out.println("\nWho do you want to bet on?\n");
-		System.out.println("\t(P) Player Wins");
-		System.out.println("\t(B) Banker Wins");
-		System.out.println("\t(T) Tie Game");
-		System.out.println("");
-		System.out.print("Enter your choice: ");
-		char option = input.nextLine().toLowerCase().charAt(0);
-		return option;
-	}
-	
-	
+	/**
+	 * Duplicates a card from the deck, then removes it from the deck.
+	 * @return returns the drawn card
+	 */
 	public Card drawCard() {
 		if(deck.getDeck().size() <= 0) {
 			deck = new CardDeck();
@@ -111,8 +136,10 @@ public class PuntoBancoGame {
 		return drawnCard; 
 	}
 
-	/*
+	/**
+	 * @param Takes an arraylist of type Card.
 	 * Iterates through a player's hand and adds all their cards to a sum. Cards with face ranks or rank 10 are ignored.
+	 * @return returns the amount of points in a given hand of cards.
 	 */
 	public int countPoints(ArrayList<Card> hand) {
 		int sum = 0;
@@ -124,7 +151,11 @@ public class PuntoBancoGame {
 		return (sum % 10);
 	}
 	
-	
+	/**
+	 * Governs the actions of the banker, based on the points that the player and banker have earned.
+	 * If the player and banker both meet conditions relative to oneanother, the banker draws a new card.
+	 * @param playerDrew whether or not the player drew a card
+	 */
 	public void getBankerAction(boolean playerDrew) {
 		if(playerDrew) {
 			if(playerHand.get(2).getRank() <= 3 && playerHand.get(2).getRank() > 1) {
@@ -155,7 +186,10 @@ public class PuntoBancoGame {
 		}
 	}
 	
-	
+	/**
+	 * Displays the cards that the player and banker have drawn
+	 * No parameters or returns. Purely visual.
+	 */
 	public void displayResults() {
 		System.out.printf("%n                     - PUNTO BANCO -                     %n");
 		System.out.printf("+===========================+===========================+%n");
@@ -182,6 +216,11 @@ public class PuntoBancoGame {
 		System.out.printf("+===========================+===========================+%n");
 	}
 	
+	/**
+	 * Tallies up the points of the player and banker, and displays whether or not the user has won.
+	 * Also increases the user's win count and wealth if they win, and takes away wealth if they lose.
+	 * @throws IOException
+	 */
 	public void tallyPoints() throws IOException {
 		
 		System.out.printf("%n              $$$$$$$$$$$$$$$$$$$$$$$$$$$$              %n");
@@ -214,7 +253,10 @@ public class PuntoBancoGame {
 		}
 	}
 	
-	
+	/**
+	 * Asks the user if they wish to start another round
+	 * @return returns the user's choice
+	 */
 	public char promptRepeat() {
 		System.out.print("\nDo you want to play again?(Y/N) ");
 		input.nextLine();
@@ -222,7 +264,10 @@ public class PuntoBancoGame {
 		return again;
 	}
 	
-	
+	/**
+	 * Checks if the user has won
+	 * @return whether or not the user has won
+	 */
 	public boolean awardPoints() {
 		boolean youWon = false;
 		if(winState=='p') {
