@@ -1,5 +1,6 @@
 package mru.game.view;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import mru.game.model.Player;
@@ -52,9 +53,59 @@ public class AppMenu {
 		return name;
 	}
 	
+	public String inquireName() {
+		
+		System.out.print("What is your name: ");
+		String name = input.nextLine().trim();
+		return name;
+	}
+	
+	
+	public void welcomeExistingPlayer(Player ply) {
+		System.out.println("\n\n********************************************************************");
+		System.out.printf("***   Welcome back %-9s---     Your balance is: %-5d$      ***%n",ply.getName(),ply.getBalance());
+		System.out.println("********************************************************************");
+	}
+	
+	
+	public void welcomeNewPlayer(String name) {
+		System.out.println("\n\n********************************************************************");
+		System.out.printf("***   Welcome %-9s---     Your initial balance is: 100 $    ***%n",name);
+		System.out.println("********************************************************************");
+		
+	}
+	
+	
 	public void showPlayer(Player ply) {
 		
-		System.out.println(ply);
+		System.out.println("\n\n                   - PLAYER INFO -                   ");
+		System.out.println("+================+================+================+");
+		System.out.println("|NAME            |# WINS          |BALANCE         |");
+		System.out.println("+================+================+================+");
+		System.out.printf ("|%-16s|%-16d|%-14d$ |%n",ply.getName(),ply.getNumOfWins(),ply.getBalance());
+		System.out.println("+================+================+================+");
+		promptContinue();
 	}
+	
+	
+	public void promptContinue() {
+		System.out.println("Press \"Enter\" to continue...");
+		input.nextLine();
+	}
+	
+	public char promptGameType() {
+		
+		System.out.println("Who do you want to bet on?\n");
+		System.out.println("\t(P) Player Wins");
+		System.out.println("\t(B) Banker Wins");
+		System.out.println("\t(T) Tie Game");
+		System.out.println("");
+		System.out.print("Enter your choice: ");
+		
+		char option = input.nextLine().toLowerCase().charAt(0);
+		return option;
+	}
+	
+	
 	
 }

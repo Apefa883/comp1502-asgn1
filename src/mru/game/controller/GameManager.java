@@ -24,6 +24,8 @@ public class GameManager {
 	private final String FILE_PATH = "res/CasinoInfo.txt";
 	ArrayList<Player> players;
 	AppMenu appMen;
+	public boolean flag;
+	PuntoBancoGame gameLogic;
 	
 	public GameManager() throws Exception {
 		players = new ArrayList<>();
@@ -34,7 +36,7 @@ public class GameManager {
 
 	private void lunchApplication() throws IOException {
 		
-		boolean flag = true;
+		flag = true;
 		char option;
 		
 		while (flag) {
@@ -43,6 +45,7 @@ public class GameManager {
 			switch (option) {
 			case 'p':
 				playGame();
+				flag=false;
 				break;
 			case 's':
 				Search();
@@ -54,8 +57,16 @@ public class GameManager {
 		}
 	}
 	
-	private void playGame() {
-		// TODO Auto-generated method stub
+	private void playGame() throws IOException {
+		int playerSpot = logIn();
+		if (playerSpot >= 0) {
+			gameLogic = new PuntoBancoGame(players.get(playerSpot));
+			gameLogic.playRound();
+			Save();
+		} else {
+			System.out.print("\nYou are too broke to play! Returning to main menu...\n");
+			lunchApplication();
+		}
 		
 	}
 
@@ -83,24 +94,17 @@ public class GameManager {
 		String name = appMen.promptName();
 		Player ply = null;
 		
-		for (Player p: players) {
+		for (int i = 0; i < players.size(); i++) {
 			
-			if (p.getName().toLowerCase().equals(name.toLowerCase())) {
-				ply = p;
-				System.out.println("");
-				System.out.println("Player Found!");
+			if (players.get(i).getName().toLowerCase().equals(name.toLowerCase())) {
+				ply = players.get(i);
 				appMen.showPlayer(ply);
-				System.out.println("");
-				break;
-			}
-			else {
-				System.out.println("");
-				System.out.println("Player not found!");
-				System.out.println("");
 				break;
 			}
 		}
-		
+		if(ply == null) {
+			System.out.print("\nPlayer does not exist!\n");
+		}
 		return ply;
 	}
 
@@ -109,6 +113,50 @@ public class GameManager {
 		Player ply = null;
 //		int wins = Integer.parseInt(players.get(2));
 //		Player ply = Collections.max(players.get(2));
+		int firstPos = 0;
+		int secondPos = 0;
+		int thirdPos = 0;
+		int firstWins = 0;
+		int secondWins = 0;
+		int thirdWins = 0;
+		
+		
+		for(int i = 0; i < players.size(); i++) {
+			if(players.get(i).getNumOfWins() >= firstWins) {
+				firstPos = i;
+				firstWins = players.get(i).getNumOfWins();
+			}
+		}
+		
+		for(int i = 0; i < players.size(); i++) {
+			if(players.get(i).getNumOfWins() >= secondWins && 
+					players.get(i).getNumOfWins() <= players.get(firstPos).getNumOfWins() && i != firstPos) {
+				secondPos = i;
+				secondWins = players.get(i).getNumOfWins();
+			}
+		}
+		
+		for(int i = 0; i < players.size(); i++) {
+			if(players.get(i).getNumOfWins() >= thirdWins && 
+					players.get(i).getNumOfWins() <= players.get(secondPos).getNumOfWins() &&
+					i != firstPos && i != secondPos) {
+				thirdPos = i;
+				thirdWins = players.get(i).getNumOfWins();
+			}
+		}
+		
+		System.out.println("\n\n               - TOP PLAYERS -               ");
+		System.out.println("+=====================+=====================+");
+		System.out.printf ("|%-21s|%-21d|%n",players.get(firstPos).getName(),players.get(firstPos).getNumOfWins());
+		System.out.println("+=====================+=====================+");
+		System.out.printf ("|%-21s|%-21d|%n",players.get(secondPos).getName(),players.get(secondPos).getNumOfWins());
+		System.out.println("+=====================+=====================+");
+		System.out.printf ("|%-21s|%-21d|%n",players.get(thirdPos).getName(),players.get(thirdPos).getNumOfWins());
+		System.out.print("+=====================+=====================+\n\n");
+		
+		appMen.promptContinue();
+		
+		
 		return ply;
 	}
 
@@ -147,5 +195,34 @@ public class GameManager {
 			fileReader.close();
 		}
 	}
+	
+	
+	
+	public int logIn() {
+
+		String name = appMen.inquireName();
+		Player ply = null;
+		int playerSpot = 0;
+		
+		for (int i = 0; i < players.size(); i++) {
+			
+			if (players.get(i).getName().toLowerCase().equals(name.toLowerCase())) {
+				ply = players.get(i);
+				if(ply.getBalance() <= 0) {
+					playerSpot = -1;
+					break;
+				}
+				playerSpot = i;
+				appMen.welcomeExistingPlayer(ply);
+			}
+		}
+		if(ply == null) {
+			playerSpot = players.size();
+			players.add(new Player(name,100,0));
+			appMen.welcomeNewPlayer(name);
+		}
+		return playerSpot;
+	}
+	
 
 }
