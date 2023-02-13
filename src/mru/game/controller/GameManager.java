@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 
 import mru.game.model.Player;
@@ -27,6 +26,14 @@ public class GameManager {
 	public boolean flag;
 	PuntoBancoGame gameLogic;
 	
+	/**
+	 * Constructor class. 
+	 * Assigns an ArrayList to variable "players".
+	 * Assigns AppMenu Class to variable "appMen".
+	 * calls loadData and lunchApplication methods.
+	 * @throws Exception
+	 * @return Doesn't return anything.
+	 */
 	public GameManager() throws Exception {
 		players = new ArrayList<>();
 		appMen = new AppMenu();
@@ -34,6 +41,11 @@ public class GameManager {
 		lunchApplication();
 	}
 
+	/**
+	 * Takes information from AppMenu and calls methods according to the given information.
+	 * @throws IOSException
+	 * @return Doesn't return anything.
+	 */
 	private void lunchApplication() throws IOException {
 		
 		flag = true;
@@ -57,6 +69,12 @@ public class GameManager {
 		}
 	}
 	
+	/**
+	 * Takes player information from logIn method and checks to see if player is qualified to play.
+	 * If qualified, plays the game, if not returns to main menu.
+	 * @throws IOSException
+	 * @return Doesn't return anything.
+	 */
 	private void playGame() throws IOException {
 		int playerSpot = logIn();
 		if (playerSpot >= 0) {
@@ -70,6 +88,10 @@ public class GameManager {
 		
 	}
 
+	/**
+	 * Takes information from AppMenu and calls methods according to the given information.
+	 * @return Doesn't return anything.
+	 */
 	private void Search() {
 		
 		char option = appMen.showSubMenu();
@@ -88,7 +110,12 @@ public class GameManager {
 			break;
 		}
 	}
-
+	
+	/**
+	 * Takes information from AppMenu and searches for given information in CasinoInfo.txt file.
+	 * Displays player information if found, if not found displays "Player does not exist!"
+	 * @return Doesn't return anything.
+	 */
 	private Player searchByName() {
 	
 		String name = appMen.promptName();
@@ -108,11 +135,14 @@ public class GameManager {
 		return ply;
 	}
 
-	private Player findTopPlayer() { // NEED TO IMPLEMENT
+	/**
+	 * Goes through the CasinoInfo.txt file and orders the top 3 players with most wins from top to bottom.
+	 * Then displays the top 3 players and prompts the user for an input to continue.
+	 * @return Doesn't return anything.
+	 */
+	private Player findTopPlayer() {
 
 		Player ply = null;
-//		int wins = Integer.parseInt(players.get(2));
-//		Player ply = Collections.max(players.get(2));
 		int firstPos = 0;
 		int secondPos = 0;
 		int thirdPos = 0;
@@ -160,6 +190,11 @@ public class GameManager {
 		return ply;
 	}
 
+	/**
+	 * Takes the returned String value from AppMenu's format method and writes it into the CasinoInfo.txt file.
+	 * @throws IOSException
+	 * @return Doesn't return anything.
+	 */
 	private void Save() throws IOException {
 		File db = new File(FILE_PATH);
 		PrintWriter pw = new PrintWriter(db);
@@ -175,6 +210,12 @@ public class GameManager {
 		System.out.println("Done! Please visit us again!");
 	}
 	
+	/**
+	 * Searches for the user inputed name in CasinoInfo.txt. 
+	 * If the name is found in the file, updates player information to the corresponding information found in the file.
+	 * @throws Exception
+	 * @return Doesn't return anything.
+	 */
 	private void loadData() throws Exception {
 		
 		File db = new File(FILE_PATH);
@@ -196,8 +237,11 @@ public class GameManager {
 		}
 	}
 	
-	
-	
+	/**
+	 * Searches for existing player, if exists, assigns found information to player and decides if player is eligible for play.
+	 * If not existing player, creates a new player profile with the given name and default balance and win values.
+	 * @return returns playerSpot
+	 */
 	public int logIn() {
 
 		String name = appMen.inquireName();

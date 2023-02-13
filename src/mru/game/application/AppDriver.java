@@ -4,6 +4,10 @@ import mru.game.controller.GameManager;
 
 public class AppDriver {
 
+	/**
+	 * main method.
+	 * Starts the application.
+	 */
 	public static void main(String[] args) throws Exception {
 		
 		// This is the starting point of the project!
