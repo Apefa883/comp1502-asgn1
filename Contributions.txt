@@ -1,0 +1,19 @@
+This document serves to list the contributions of group members Adam Pefanis and Tony Nguyen for COMP 1502 Assignment 1.
+
+Adam Pefanis:
+Search Playername
+Top Playername
+Punto Banco game logic
+Card storage and handling
+JUnit Tests
+Punto Banco ingame GUI
+
+
+Tony Nguyen:
+File I/O
+Saving/Loading
+Structure/Backbone
+GameManager
+AppMenu
+SubMenu
+Javadoc
