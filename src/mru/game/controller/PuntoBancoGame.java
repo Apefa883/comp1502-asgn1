@@ -258,9 +258,20 @@ public class PuntoBancoGame {
 	 * @return returns the user's choice
 	 */
 	public char promptRepeat() {
-		System.out.print("\nDo you want to play again?(Y/N) ");
-		input.nextLine();
-		char again = input.nextLine().toLowerCase().charAt(0);
+		char again = 'n';
+		if(player.getBalance() > 0) {
+			System.out.print("\nDo you want to play again?(Y/N) ");
+			input.nextLine();
+			again = input.nextLine().toLowerCase().charAt(0);
+			while(again != 'y' && again != 'n') {
+				System.out.print("\nNot a valid answer! Do you want to play again?(Y/N) ");
+				again = input.nextLine().toLowerCase().charAt(0);
+			}
+		} else {
+			System.out.printf("%n             ☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠              ");
+			System.out.printf("%n       ☠☠☠ L + Ratio + Game Over + No Money ☠☠☠");
+			System.out.printf("%n             ☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠☠              %n");
+		}
 		return again;
 	}
 	

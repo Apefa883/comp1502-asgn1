@@ -26,6 +26,7 @@ public class GameManager {
 	public boolean flag;
 	PuntoBancoGame gameLogic;
 	
+	
 	/**
 	 * Constructor class. 
 	 * Assigns an ArrayList to variable "players".
@@ -41,6 +42,7 @@ public class GameManager {
 		lunchApplication();
 	}
 
+	
 	/**
 	 * Takes information from AppMenu and calls methods according to the given information.
 	 * @throws IOSException
@@ -209,6 +211,7 @@ public class GameManager {
 		pw.close();
 		System.out.println("Done! Please visit us again!");
 	}
+	
 	
 	/**
 	 * Searches for the user inputed name in CasinoInfo.txt. 
